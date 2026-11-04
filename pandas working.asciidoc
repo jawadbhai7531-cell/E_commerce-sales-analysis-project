@@ -1,0 +1,989 @@
++*In[1]:*+
+[source, ipython3]
+----
+#import data :
+import pandas as pd
+
+df = pd.read_csv(r"C:\Users\Ravi\Desktop\project data.csv")
+----
+
+
++*In[2]:*+
+[source, ipython3]
+----
+df.info()
+----
+
+
++*Out[2]:*+
+----
+<class 'pandas.DataFrame'>
+RangeIndex: 118299 entries, 0 to 118298
+Data columns (total 47 columns):
+ #   Column                         Non-Null Count   Dtype  
+---  ------                         --------------   -----  
+ 0   order_id                       118299 non-null  str    
+ 1   customer_id                    118299 non-null  str    
+ 2   order_status                   118299 non-null  str    
+ 3   order_purchase_timestamp       118299 non-null  str    
+ 4   order_approved_at              118299 non-null  str    
+ 5   order_delivered_carrier_date   118299 non-null  str    
+ 6   order_delivered_customer_date  118299 non-null  str    
+ 7   order_estimated_delivery_date  118299 non-null  str    
+ 8   delivery_days                  118299 non-null  int64  
+ 9   delivery_delay                 118299 non-null  int64  
+ 10  purchase_month                 118299 non-null  int64  
+ 11  purchase_year                  118299 non-null  int64  
+ 12  purchase_Day                   118299 non-null  str    
+ 13  Transaction                    118299 non-null  int64  
+ 14  customer_unique_id             118299 non-null  str    
+ 15  customer_zip_code_prefix       118299 non-null  int64  
+ 16  customer_city                  118299 non-null  str    
+ 17  customer_state                 118299 non-null  str    
+ 18  order_item_id                  118299 non-null  int64  
+ 19  product_id                     118299 non-null  str    
+ 20  seller_id                      118299 non-null  str    
+ 21  shipping_limit_date            118299 non-null  str    
+ 22  price                          118299 non-null  float64
+ 23  freight_value                  118299 non-null  float64
+ 24  product_category_name          118299 non-null  str    
+ 25  product_name_lenght            118299 non-null  int64  
+ 26  product_description_lenght     118299 non-null  int64  
+ 27  product_photos_qty             118299 non-null  int64  
+ 28  product_weight_g               118299 non-null  int64  
+ 29  product_length_cm              118299 non-null  int64  
+ 30  product_height_cm              118299 non-null  int64  
+ 31  product_width_cm               118299 non-null  int64  
+ 32  seller_zip_code_prefix         118299 non-null  int64  
+ 33  seller_city                    118299 non-null  str    
+ 34  seller_state                   118299 non-null  str    
+ 35  payment_sequential             118299 non-null  int64  
+ 36  payment_type                   118299 non-null  str    
+ 37  payment_installments           118299 non-null  int64  
+ 38  payment_value                  118299 non-null  float64
+ 39  review_id                      117321 non-null  str    
+ 40  review_score                   117321 non-null  float64
+ 41  review_comment_title           117321 non-null  str    
+ 42  review_comment_message         117321 non-null  str    
+ 43  review_creation_date           117321 non-null  str    
+ 44  review_answer_timestamp        117321 non-null  str    
+ 45  Response_time_days             117321 non-null  float64
+ 46  review_creation_month          117321 non-null  float64
+dtypes: float64(6), int64(17), str(24)
+memory usage: 133.8 MB
+----
+
+
++*In[7]:*+
+[source, ipython3]
+----
+#check fist 5 rows:
+df.head()
+----
+
+
++*Out[7]:*+
+----
+[cols=",,,,,,,,,,,,,,,,,,,,,",options="header",]
+|===
+| |order++_++id |customer++_++id |order++_++status
+|order++_++purchase++_++timestamp |order++_++approved++_++at
+|order++_++delivered++_++customer++_++date
+|order++_++estimated++_++delivery++_++date |delivery++_++days
+|delivery++_++delay |purchase++_++month |... |product++_++length++_++cm
+|seller++_++city |seller++_++state |payment++_++sequential
+|payment++_++type |payment++_++installments |payment++_++value
+|review++_++score |review++_++comment++_++title
+|review++_++creation++_++date
+|0 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |10/2/2017 10:56 |10/2/2017 11:07 |10/10/2017 21:25
+|10/18/2017 |8 |-8 |10 |... |19 |maua |SP |1 |credit++_++card |1 |18.12
+|4.0 |No Title |10/11/2017
+
+|1 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |10/2/2017 10:56 |10/2/2017 11:07 |10/10/2017 21:25
+|10/18/2017 |8 |-8 |10 |... |19 |maua |SP |3 |voucher |1 |2.00 |4.0 |No
+Title |10/11/2017
+
+|2 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |10/2/2017 10:56 |10/2/2017 11:07 |10/10/2017 21:25
+|10/18/2017 |8 |-8 |10 |... |19 |maua |SP |2 |voucher |1 |18.59 |4.0 |No
+Title |10/11/2017
+
+|3 |53cdb2fc8bc7dce0b6741e2150273451 |b0830fb4747a6c6d20dea0b8c802d7ef
+|delivered |7/24/2018 20:41 |7/26/2018 3:24 |8/7/2018 15:27 |8/13/2018
+|13 |-6 |7 |... |19 |belo horizonte |SP |1 |boleto |1 |141.46 |4.0
+|Muito boa a loja |8/8/2018
+
+|4 |47770eb9100c2d0c44946d9cf07ec65d |41ce2a54c0b03bf3443c3d931a367089
+|delivered |8/8/2018 8:38 |8/8/2018 8:55 |8/17/2018 18:06 |9/4/2018 |9
+|-18 |8 |... |24 |guariba |SP |1 |credit++_++card |3 |179.12 |5.0 |No
+Title |8/18/2018
+|===
+
+5 rows × 34 columns
+----
+
+
++*In[8]:*+
+[source, ipython3]
+----
+df.info()
+----
+
+
++*Out[8]:*+
+----
+<class 'pandas.DataFrame'>
+RangeIndex: 118299 entries, 0 to 118298
+Data columns (total 34 columns):
+ #   Column                         Non-Null Count   Dtype  
+---  ------                         --------------   -----  
+ 0   order_id                       118299 non-null  str    
+ 1   customer_id                    118299 non-null  str    
+ 2   order_status                   118299 non-null  str    
+ 3   order_purchase_timestamp       118299 non-null  str    
+ 4   order_approved_at              118299 non-null  str    
+ 5   order_delivered_customer_date  118299 non-null  str    
+ 6   order_estimated_delivery_date  118299 non-null  str    
+ 7   delivery_days                  118299 non-null  int64  
+ 8   delivery_delay                 118299 non-null  int64  
+ 9   purchase_month                 118299 non-null  int64  
+ 10  purchase_year                  118299 non-null  int64  
+ 11  purchase_Day                   118299 non-null  str    
+ 12  Transaction                    118299 non-null  int64  
+ 13  customer_unique_id             118299 non-null  str    
+ 14  customer_city                  118299 non-null  str    
+ 15  customer_state                 118299 non-null  str    
+ 16  order_item_id                  118299 non-null  int64  
+ 17  product_id                     118299 non-null  str    
+ 18  seller_id                      118299 non-null  str    
+ 19  shipping_limit_date            118299 non-null  str    
+ 20  price                          118299 non-null  float64
+ 21  freight_value                  118299 non-null  float64
+ 22  product_category_name          118299 non-null  str    
+ 23  product_weight_g               118299 non-null  int64  
+ 24  product_length_cm              118299 non-null  int64  
+ 25  seller_city                    118299 non-null  str    
+ 26  seller_state                   118299 non-null  str    
+ 27  payment_sequential             118299 non-null  int64  
+ 28  payment_type                   118299 non-null  str    
+ 29  payment_installments           118299 non-null  int64  
+ 30  payment_value                  118299 non-null  float64
+ 31  review_score                   117321 non-null  float64
+ 32  review_comment_title           117321 non-null  str    
+ 33  review_creation_date           117321 non-null  str    
+dtypes: float64(4), int64(10), str(20)
+memory usage: 66.2 MB
+----
+
+
++*In[11]:*+
+[source, ipython3]
+----
+df
+----
+
+
++*Out[11]:*+
+----
+[cols=",,,,,,,,,,,,,,,,,,,,,",options="header",]
+|===
+| |order++_++id |customer++_++id |order++_++status
+|order++_++purchase++_++timestamp |order++_++approved++_++at
+|order++_++delivered++_++customer++_++date
+|order++_++estimated++_++delivery++_++date |delivery++_++days
+|delivery++_++delay |purchase++_++month |... |product++_++weight++_++g
+|seller++_++city |seller++_++state |payment++_++sequential
+|payment++_++type |payment++_++installments |payment++_++value
+|review++_++score |review++_++comment++_++title
+|review++_++creation++_++date
+|0 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |10/2/2017 10:56 |10/2/2017 11:07 |10/10/2017 21:25
+|10/18/2017 |8 |-8 |10 |... |500 |maua |SP |1 |credit++_++card |1 |18.12
+|4.0 |No Title |10/11/2017
+
+|1 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |10/2/2017 10:56 |10/2/2017 11:07 |10/10/2017 21:25
+|10/18/2017 |8 |-8 |10 |... |500 |maua |SP |3 |voucher |1 |2.00 |4.0 |No
+Title |10/11/2017
+
+|2 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |10/2/2017 10:56 |10/2/2017 11:07 |10/10/2017 21:25
+|10/18/2017 |8 |-8 |10 |... |500 |maua |SP |2 |voucher |1 |18.59 |4.0
+|No Title |10/11/2017
+
+|3 |53cdb2fc8bc7dce0b6741e2150273451 |b0830fb4747a6c6d20dea0b8c802d7ef
+|delivered |7/24/2018 20:41 |7/26/2018 3:24 |8/7/2018 15:27 |8/13/2018
+|13 |-6 |7 |... |400 |belo horizonte |SP |1 |boleto |1 |141.46 |4.0
+|Muito boa a loja |8/8/2018
+
+|4 |47770eb9100c2d0c44946d9cf07ec65d |41ce2a54c0b03bf3443c3d931a367089
+|delivered |8/8/2018 8:38 |8/8/2018 8:55 |8/17/2018 18:06 |9/4/2018 |9
+|-18 |8 |... |420 |guariba |SP |1 |credit++_++card |3 |179.12 |5.0 |No
+Title |8/18/2018
+
+|... |... |... |... |... |... |... |... |... |... |... |... |... |...
+|... |... |... |... |... |... |... |...
+
+|118294 |63943bddc261676b46f01ca7ac2f7bd8
+|1fca14ff2861355f6e5f14306ff977a7 |delivered |2/6/2018 12:58 |2/6/2018
+13:10 |2/28/2018 17:37 |3/2/2018 |22 |-2 |2 |... |4950 |tupa |SP |1
+|credit++_++card |3 |195.00 |4.0 |No Title |3/1/2018 0:00
+
+|118295 |83c1379a015df1e13d02aae0204711ab
+|1aa71eb042121263aafbe80c1b562c9c |delivered |8/27/2017 14:46 |8/27/2017
+15:04 |9/21/2017 11:24 |9/27/2017 |24 |-6 |8 |... |13300 |sao paulo |SP
+|1 |credit++_++card |5 |271.01 |5.0 |No Title |9/22/2017 0:00
+
+|118296 |11c177c8e97725db2631073c19f07b62
+|b331b74b18dc79bcdf6532d51e1637c1 |delivered |1/8/2018 21:28 |1/8/2018
+21:36 |1/25/2018 23:32 |2/15/2018 |17 |-21 |1 |... |6550 |ilicinea |MG
+|1 |credit++_++card |4 |441.16 |2.0 |No Title |1/26/2018 0:00
+
+|118297 |11c177c8e97725db2631073c19f07b62
+|b331b74b18dc79bcdf6532d51e1637c1 |delivered |1/8/2018 21:28 |1/8/2018
+21:36 |1/25/2018 23:32 |2/15/2018 |17 |-21 |1 |... |6550 |ilicinea |MG
+|1 |credit++_++card |4 |441.16 |2.0 |No Title |1/26/2018 0:00
+
+|118298 |66dea50a8b16d9b4dee7af250b4be1a5
+|edb027a75a1449115f6b43211ae02a24 |delivered |3/8/2018 20:57 |3/9/2018
+11:20 |3/16/2018 13:08 |4/3/2018 |7 |-18 |3 |... |150 |franca |SP |1
+|debit++_++card |1 |86.86 |5.0 |No Title |3/17/2018 0:00
+|===
+
+118299 rows × 33 columns
+----
+
+
++*In[13]:*+
+[source, ipython3]
+----
+#check information of DF:
+df.info()
+----
+
+
++*Out[13]:*+
+----
+<class 'pandas.DataFrame'>
+RangeIndex: 118299 entries, 0 to 118298
+Data columns (total 33 columns):
+ #   Column                         Non-Null Count   Dtype  
+---  ------                         --------------   -----  
+ 0   order_id                       118299 non-null  str    
+ 1   customer_id                    118299 non-null  str    
+ 2   order_status                   118299 non-null  str    
+ 3   order_purchase_timestamp       118299 non-null  str    
+ 4   order_approved_at              118299 non-null  str    
+ 5   order_delivered_customer_date  118299 non-null  str    
+ 6   order_estimated_delivery_date  118299 non-null  str    
+ 7   delivery_days                  118299 non-null  int64  
+ 8   delivery_delay                 118299 non-null  int64  
+ 9   purchase_month                 118299 non-null  int64  
+ 10  purchase_year                  118299 non-null  int64  
+ 11  purchase_Day                   118299 non-null  str    
+ 12  Transaction                    118299 non-null  int64  
+ 13  customer_unique_id             118299 non-null  str    
+ 14  customer_city                  118299 non-null  str    
+ 15  customer_state                 118299 non-null  str    
+ 16  order_item_id                  118299 non-null  int64  
+ 17  product_id                     118299 non-null  str    
+ 18  seller_id                      118299 non-null  str    
+ 19  shipping_limit_date            118299 non-null  str    
+ 20  price                          118299 non-null  float64
+ 21  freight_value                  118299 non-null  float64
+ 22  product_category_name          118299 non-null  str    
+ 23  product_weight_g               118299 non-null  int64  
+ 24  seller_city                    118299 non-null  str    
+ 25  seller_state                   118299 non-null  str    
+ 26  payment_sequential             118299 non-null  int64  
+ 27  payment_type                   118299 non-null  str    
+ 28  payment_installments           118299 non-null  int64  
+ 29  payment_value                  118299 non-null  float64
+ 30  review_score                   117321 non-null  float64
+ 31  review_comment_title           117321 non-null  str    
+ 32  review_creation_date           117321 non-null  str    
+dtypes: float64(4), int64(9), str(20)
+memory usage: 65.3 MB
+----
+
+
++*In[14]:*+
+[source, ipython3]
+----
+#check nan as true false:
+df.isnull()
+----
+
+
++*Out[14]:*+
+----
+[cols=",,,,,,,,,,,,,,,,,,,,,",options="header",]
+|===
+| |order++_++id |customer++_++id |order++_++status
+|order++_++purchase++_++timestamp |order++_++approved++_++at
+|order++_++delivered++_++customer++_++date
+|order++_++estimated++_++delivery++_++date |delivery++_++days
+|delivery++_++delay |purchase++_++month |... |product++_++weight++_++g
+|seller++_++city |seller++_++state |payment++_++sequential
+|payment++_++type |payment++_++installments |payment++_++value
+|review++_++score |review++_++comment++_++title
+|review++_++creation++_++date
+|0 |False |False |False |False |False |False |False |False |False |False
+|... |False |False |False |False |False |False |False |False |False
+|False
+
+|1 |False |False |False |False |False |False |False |False |False |False
+|... |False |False |False |False |False |False |False |False |False
+|False
+
+|2 |False |False |False |False |False |False |False |False |False |False
+|... |False |False |False |False |False |False |False |False |False
+|False
+
+|3 |False |False |False |False |False |False |False |False |False |False
+|... |False |False |False |False |False |False |False |False |False
+|False
+
+|4 |False |False |False |False |False |False |False |False |False |False
+|... |False |False |False |False |False |False |False |False |False
+|False
+
+|... |... |... |... |... |... |... |... |... |... |... |... |... |...
+|... |... |... |... |... |... |... |...
+
+|118294 |False |False |False |False |False |False |False |False |False
+|False |... |False |False |False |False |False |False |False |False
+|False |False
+
+|118295 |False |False |False |False |False |False |False |False |False
+|False |... |False |False |False |False |False |False |False |False
+|False |False
+
+|118296 |False |False |False |False |False |False |False |False |False
+|False |... |False |False |False |False |False |False |False |False
+|False |False
+
+|118297 |False |False |False |False |False |False |False |False |False
+|False |... |False |False |False |False |False |False |False |False
+|False |False
+
+|118298 |False |False |False |False |False |False |False |False |False
+|False |... |False |False |False |False |False |False |False |False
+|False |False
+|===
+
+118299 rows × 33 columns
+----
+
+
++*In[15]:*+
+[source, ipython3]
+----
+#check null value in column as count:
+df.isnull().sum()
+----
+
+
++*Out[15]:*+
+----order_id                           0
+customer_id                        0
+order_status                       0
+order_purchase_timestamp           0
+order_approved_at                  0
+order_delivered_customer_date      0
+order_estimated_delivery_date      0
+delivery_days                      0
+delivery_delay                     0
+purchase_month                     0
+purchase_year                      0
+purchase_Day                       0
+Transaction                        0
+customer_unique_id                 0
+customer_city                      0
+customer_state                     0
+order_item_id                      0
+product_id                         0
+seller_id                          0
+shipping_limit_date                0
+price                              0
+freight_value                      0
+product_category_name              0
+product_weight_g                   0
+seller_city                        0
+seller_state                       0
+payment_sequential                 0
+payment_type                       0
+payment_installments               0
+payment_value                      0
+review_score                     978
+review_comment_title             978
+review_creation_date             978
+dtype: int64----
+
+
++*In[16]:*+
+[source, ipython3]
+----
+# replace nan to no review:
+df["review_score"] = df["review_score"].fillna("No Review")
+----
+
+
++*In[17]:*+
+[source, ipython3]
+----
+# replace nan to 0/0/0:
+df["review_creation_date"] = df["review_creation_date"].fillna("0/0/0")
+
+
+
+
+----
+
+
++*In[18]:*+
+[source, ipython3]
+----
+#drop column:
+df.drop("review_comment_title",axis=1,inplace=True)
+----
+
+
++*In[19]:*+
+[source, ipython3]
+----
+#check info:
+df.info()
+----
+
+
++*Out[19]:*+
+----
+<class 'pandas.DataFrame'>
+RangeIndex: 118299 entries, 0 to 118298
+Data columns (total 32 columns):
+ #   Column                         Non-Null Count   Dtype  
+---  ------                         --------------   -----  
+ 0   order_id                       118299 non-null  str    
+ 1   customer_id                    118299 non-null  str    
+ 2   order_status                   118299 non-null  str    
+ 3   order_purchase_timestamp       118299 non-null  str    
+ 4   order_approved_at              118299 non-null  str    
+ 5   order_delivered_customer_date  118299 non-null  str    
+ 6   order_estimated_delivery_date  118299 non-null  str    
+ 7   delivery_days                  118299 non-null  int64  
+ 8   delivery_delay                 118299 non-null  int64  
+ 9   purchase_month                 118299 non-null  int64  
+ 10  purchase_year                  118299 non-null  int64  
+ 11  purchase_Day                   118299 non-null  str    
+ 12  Transaction                    118299 non-null  int64  
+ 13  customer_unique_id             118299 non-null  str    
+ 14  customer_city                  118299 non-null  str    
+ 15  customer_state                 118299 non-null  str    
+ 16  order_item_id                  118299 non-null  int64  
+ 17  product_id                     118299 non-null  str    
+ 18  seller_id                      118299 non-null  str    
+ 19  shipping_limit_date            118299 non-null  str    
+ 20  price                          118299 non-null  float64
+ 21  freight_value                  118299 non-null  float64
+ 22  product_category_name          118299 non-null  str    
+ 23  product_weight_g               118299 non-null  int64  
+ 24  seller_city                    118299 non-null  str    
+ 25  seller_state                   118299 non-null  str    
+ 26  payment_sequential             118299 non-null  int64  
+ 27  payment_type                   118299 non-null  str    
+ 28  payment_installments           118299 non-null  int64  
+ 29  payment_value                  118299 non-null  float64
+ 30  review_score                   118299 non-null  object 
+ 31  review_creation_date           118299 non-null  str    
+dtypes: float64(3), int64(9), object(1), str(19)
+memory usage: 63.4+ MB
+----
+
+
++*In[20]:*+
+[source, ipython3]
+----
+# check null in revieore:
+df["reviw_scew_score"].isnull().sum()
+----
+
+
++*Out[20]:*+
+----np.int64(0)----
+
+
++*In[23]:*+
+[source, ipython3]
+----
+# check null in review_creation_date:
+df["review_creation_date"].isnull().sum()
+
+----
+
+
++*Out[23]:*+
+----np.int64(0)----
+
+
++*In[24]:*+
+[source, ipython3]
+----
+df.to_csv(r"C:\Users\Ravi\Desktop\cleaned_data.csv", index=False)
+
+
+
+----
+
+
++*In[25]:*+
+[source, ipython3]
+----
+df.shape
+----
+
+
++*Out[25]:*+
+----(118299, 32)----
+
+
++*In[1]:*+
+[source, ipython3]
+----
+df
+----
+
+
++*Out[1]:*+
+----
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    Cell In[1], line 1
+    ----> 1 df
+    
+
+    NameError: name 'df' is not defined
+
+----
+
+
++*In[2]:*+
+[source, ipython3]
+----
+df.head()
+
+----
+
+
++*Out[2]:*+
+----
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    Cell In[2], line 1
+    ----> 1 df.head()
+    
+
+    NameError: name 'df' is not defined
+
+----
+
+
++*In[3]:*+
+[source, ipython3]
+----
+import pandas as pd
+----
+
+
++*In[4]:*+
+[source, ipython3]
+----
+import pandas as pd
+
+df = pd.read_csv(r"C:\Users\Ravi\Desktop\cleaned_data.csv")
+----
+
+
++*In[5]:*+
+[source, ipython3]
+----
+df.head()
+----
+
+
++*Out[5]:*+
+----
+[cols=",,,,,,,,,,,,,,,,,,,,,",options="header",]
+|===
+| |order++_++id |customer++_++id |order++_++status
+|order++_++purchase++_++timestamp |order++_++approved++_++at
+|order++_++delivered++_++customer++_++date
+|order++_++estimated++_++delivery++_++date |delivery++_++days
+|delivery++_++delay |purchase++_++month |...
+|product++_++category++_++name |product++_++weight++_++g
+|seller++_++city |seller++_++state |payment++_++sequential
+|payment++_++type |payment++_++installments |payment++_++value
+|review++_++score |review++_++creation++_++date
+|0 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |10/2/2017 10:56 |10/2/2017 11:07 |10/10/2017 21:25
+|10/18/2017 |8 |-8 |10 |... |utilidades++_++domesticas |500 |maua |SP |1
+|credit++_++card |1 |18.12 |4.0 |10/11/2017
+
+|1 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |10/2/2017 10:56 |10/2/2017 11:07 |10/10/2017 21:25
+|10/18/2017 |8 |-8 |10 |... |utilidades++_++domesticas |500 |maua |SP |3
+|voucher |1 |2.00 |4.0 |10/11/2017
+
+|2 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |10/2/2017 10:56 |10/2/2017 11:07 |10/10/2017 21:25
+|10/18/2017 |8 |-8 |10 |... |utilidades++_++domesticas |500 |maua |SP |2
+|voucher |1 |18.59 |4.0 |10/11/2017
+
+|3 |53cdb2fc8bc7dce0b6741e2150273451 |b0830fb4747a6c6d20dea0b8c802d7ef
+|delivered |7/24/2018 20:41 |7/26/2018 3:24 |8/7/2018 15:27 |8/13/2018
+|13 |-6 |7 |... |perfumaria |400 |belo horizonte |SP |1 |boleto |1
+|141.46 |4.0 |8/8/2018
+
+|4 |47770eb9100c2d0c44946d9cf07ec65d |41ce2a54c0b03bf3443c3d931a367089
+|delivered |8/8/2018 8:38 |8/8/2018 8:55 |8/17/2018 18:06 |9/4/2018 |9
+|-18 |8 |... |automotivo |420 |guariba |SP |1 |credit++_++card |3
+|179.12 |5.0 |8/18/2018
+|===
+
+5 rows × 32 columns
+----
+
+
++*In[6]:*+
+[source, ipython3]
+----
+#date data type check :
+df[["order_purchase_timestamp",
+    "order_approved_at",
+    "order_delivered_customer_date",
+    "order_estimated_delivery_date"]].dtypes
+----
+
+
++*Out[6]:*+
+----order_purchase_timestamp         str
+order_approved_at                str
+order_delivered_customer_date    str
+order_estimated_delivery_date    str
+dtype: object----
+
+
++*In[7]:*+
+[source, ipython3]
+----
+#date convert to datetype:
+date_columns = [
+    "order_purchase_timestamp",
+    "order_approved_at",
+    "order_delivered_customer_date",
+    "order_estimated_delivery_date"
+]
+
+for col in date_columns:
+    df[col] = pd.to_datetime(df[col], errors="coerce")
+----
+
+
++*In[9]:*+
+[source, ipython3]
+----
+#again show date:
+df[date_columns].dtypes
+----
+
+
++*Out[9]:*+
+----order_purchase_timestamp         datetime64[us]
+order_approved_at                datetime64[us]
+order_delivered_customer_date    datetime64[us]
+order_estimated_delivery_date    datetime64[us]
+dtype: object----
+
+
++*In[1]:*+
+[source, ipython3]
+----
+df.head()
+----
+
+
++*Out[1]:*+
+----
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    Cell In[1], line 1
+    ----> 1 df.head()
+    
+
+    NameError: name 'df' is not defined
+
+----
+
+
++*In[2]:*+
+[source, ipython3]
+----
+import pandas as pd
+----
+
+
++*In[3]:*+
+[source, ipython3]
+----
+df = pd.read_csv(r"C:\Users\Ravi\Desktop\cleaned_data.csv")
+----
+
+
++*In[4]:*+
+[source, ipython3]
+----
+df.head()
+----
+
+
++*Out[4]:*+
+----
+[cols=",,,,,,,,,,,,,,,,,,,,,",options="header",]
+|===
+| |order++_++id |customer++_++id |order++_++status
+|order++_++purchase++_++timestamp |order++_++approved++_++at
+|order++_++delivered++_++customer++_++date
+|order++_++estimated++_++delivery++_++date |delivery++_++days
+|delivery++_++delay |purchase++_++month |...
+|product++_++category++_++name |product++_++weight++_++g
+|seller++_++city |seller++_++state |payment++_++sequential
+|payment++_++type |payment++_++installments |payment++_++value
+|review++_++score |review++_++creation++_++date
+|0 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |10/2/2017 10:56 |10/2/2017 11:07 |10/10/2017 21:25
+|10/18/2017 |8 |-8 |10 |... |utilidades++_++domesticas |500 |maua |SP |1
+|credit++_++card |1 |18.12 |4.0 |10/11/2017
+
+|1 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |10/2/2017 10:56 |10/2/2017 11:07 |10/10/2017 21:25
+|10/18/2017 |8 |-8 |10 |... |utilidades++_++domesticas |500 |maua |SP |3
+|voucher |1 |2.00 |4.0 |10/11/2017
+
+|2 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |10/2/2017 10:56 |10/2/2017 11:07 |10/10/2017 21:25
+|10/18/2017 |8 |-8 |10 |... |utilidades++_++domesticas |500 |maua |SP |2
+|voucher |1 |18.59 |4.0 |10/11/2017
+
+|3 |53cdb2fc8bc7dce0b6741e2150273451 |b0830fb4747a6c6d20dea0b8c802d7ef
+|delivered |7/24/2018 20:41 |7/26/2018 3:24 |8/7/2018 15:27 |8/13/2018
+|13 |-6 |7 |... |perfumaria |400 |belo horizonte |SP |1 |boleto |1
+|141.46 |4.0 |8/8/2018
+
+|4 |47770eb9100c2d0c44946d9cf07ec65d |41ce2a54c0b03bf3443c3d931a367089
+|delivered |8/8/2018 8:38 |8/8/2018 8:55 |8/17/2018 18:06 |9/4/2018 |9
+|-18 |8 |... |automotivo |420 |guariba |SP |1 |credit++_++card |3
+|179.12 |5.0 |8/18/2018
+|===
+
+5 rows × 32 columns
+----
+
+
++*In[5]:*+
+[source, ipython3]
+----
+#date data type check :
+df[["order_purchase_timestamp",
+    "order_approved_at",
+    "order_delivered_customer_date",
+    "order_estimated_delivery_date"]].dtypes
+----
+
+
++*Out[5]:*+
+----order_purchase_timestamp         str
+order_approved_at                str
+order_delivered_customer_date    str
+order_estimated_delivery_date    str
+dtype: object----
+
+
++*In[6]:*+
+[source, ipython3]
+----
+#date convert to datetype:
+date_columns = [
+    "order_purchase_timestamp",
+    "order_approved_at",
+    "order_delivered_customer_date",
+    "order_estimated_delivery_date"
+]
+
+for col in date_columns:
+    df[col] = pd.to_datetime(df[col], errors="coerce")
+----
+
+
++*In[7]:*+
+[source, ipython3]
+----
+#date data type check :
+df[["order_purchase_timestamp",
+    "order_approved_at",
+    "order_delivered_customer_date",
+    "order_estimated_delivery_date"]].dtypes
+----
+
+
++*Out[7]:*+
+----order_purchase_timestamp         datetime64[us]
+order_approved_at                datetime64[us]
+order_delivered_customer_date    datetime64[us]
+order_estimated_delivery_date    datetime64[us]
+dtype: object----
+
+
++*In[8]:*+
+[source, ipython3]
+----
+df.to_csv(r"C:\Users\Ravi\Desktop\cleaned_data.csv", index=False)
+----
+
+
++*In[9]:*+
+[source, ipython3]
+----
+df.head()
+----
+
+
++*Out[9]:*+
+----
+[cols=",,,,,,,,,,,,,,,,,,,,,",options="header",]
+|===
+| |order++_++id |customer++_++id |order++_++status
+|order++_++purchase++_++timestamp |order++_++approved++_++at
+|order++_++delivered++_++customer++_++date
+|order++_++estimated++_++delivery++_++date |delivery++_++days
+|delivery++_++delay |purchase++_++month |...
+|product++_++category++_++name |product++_++weight++_++g
+|seller++_++city |seller++_++state |payment++_++sequential
+|payment++_++type |payment++_++installments |payment++_++value
+|review++_++score |review++_++creation++_++date
+|0 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |2017-10-02 10:56:00 |2017-10-02 11:07:00 |2017-10-10
+21:25:00 |2017-10-18 |8 |-8 |10 |... |utilidades++_++domesticas |500
+|maua |SP |1 |credit++_++card |1 |18.12 |4.0 |10/11/2017
+
+|1 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |2017-10-02 10:56:00 |2017-10-02 11:07:00 |2017-10-10
+21:25:00 |2017-10-18 |8 |-8 |10 |... |utilidades++_++domesticas |500
+|maua |SP |3 |voucher |1 |2.00 |4.0 |10/11/2017
+
+|2 |e481f51cbdc54678b7cc49136f2d6af7 |9ef432eb6251297304e76186b10a928d
+|delivered |2017-10-02 10:56:00 |2017-10-02 11:07:00 |2017-10-10
+21:25:00 |2017-10-18 |8 |-8 |10 |... |utilidades++_++domesticas |500
+|maua |SP |2 |voucher |1 |18.59 |4.0 |10/11/2017
+
+|3 |53cdb2fc8bc7dce0b6741e2150273451 |b0830fb4747a6c6d20dea0b8c802d7ef
+|delivered |2018-07-24 20:41:00 |2018-07-26 03:24:00 |2018-08-07
+15:27:00 |2018-08-13 |13 |-6 |7 |... |perfumaria |400 |belo horizonte
+|SP |1 |boleto |1 |141.46 |4.0 |8/8/2018
+
+|4 |47770eb9100c2d0c44946d9cf07ec65d |41ce2a54c0b03bf3443c3d931a367089
+|delivered |2018-08-08 08:38:00 |2018-08-08 08:55:00 |2018-08-17
+18:06:00 |2018-09-04 |9 |-18 |8 |... |automotivo |420 |guariba |SP |1
+|credit++_++card |3 |179.12 |5.0 |8/18/2018
+|===
+
+5 rows × 32 columns
+----
+
+
++*In[10]:*+
+[source, ipython3]
+----
+df.to_csv(r"C:\Users\Ravi\Desktop\E_commerce_sale_analysis.csv", index=False)
+----
+
+
++*In[11]:*+
+[source, ipython3]
+----
+df["order_id"] = range(1, len(df) + 1)
+----
+
+
++*In[12]:*+
+[source, ipython3]
+----
+df.head()
+----
+
+
++*Out[12]:*+
+----
+[cols=",,,,,,,,,,,,,,,,,,,,,",options="header",]
+|===
+| |order++_++id |customer++_++id |order++_++status
+|order++_++purchase++_++timestamp |order++_++approved++_++at
+|order++_++delivered++_++customer++_++date
+|order++_++estimated++_++delivery++_++date |delivery++_++days
+|delivery++_++delay |purchase++_++month |...
+|product++_++category++_++name |product++_++weight++_++g
+|seller++_++city |seller++_++state |payment++_++sequential
+|payment++_++type |payment++_++installments |payment++_++value
+|review++_++score |review++_++creation++_++date
+|0 |1 |9ef432eb6251297304e76186b10a928d |delivered |2017-10-02 10:56:00
+|2017-10-02 11:07:00 |2017-10-10 21:25:00 |2017-10-18 |8 |-8 |10 |...
+|utilidades++_++domesticas |500 |maua |SP |1 |credit++_++card |1 |18.12
+|4.0 |10/11/2017
+
+|1 |2 |9ef432eb6251297304e76186b10a928d |delivered |2017-10-02 10:56:00
+|2017-10-02 11:07:00 |2017-10-10 21:25:00 |2017-10-18 |8 |-8 |10 |...
+|utilidades++_++domesticas |500 |maua |SP |3 |voucher |1 |2.00 |4.0
+|10/11/2017
+
+|2 |3 |9ef432eb6251297304e76186b10a928d |delivered |2017-10-02 10:56:00
+|2017-10-02 11:07:00 |2017-10-10 21:25:00 |2017-10-18 |8 |-8 |10 |...
+|utilidades++_++domesticas |500 |maua |SP |2 |voucher |1 |18.59 |4.0
+|10/11/2017
+
+|3 |4 |b0830fb4747a6c6d20dea0b8c802d7ef |delivered |2018-07-24 20:41:00
+|2018-07-26 03:24:00 |2018-08-07 15:27:00 |2018-08-13 |13 |-6 |7 |...
+|perfumaria |400 |belo horizonte |SP |1 |boleto |1 |141.46 |4.0
+|8/8/2018
+
+|4 |5 |41ce2a54c0b03bf3443c3d931a367089 |delivered |2018-08-08 08:38:00
+|2018-08-08 08:55:00 |2018-08-17 18:06:00 |2018-09-04 |9 |-18 |8 |...
+|automotivo |420 |guariba |SP |1 |credit++_++card |3 |179.12 |5.0
+|8/18/2018
+|===
+
+5 rows × 32 columns
+----
+
+
++*In[13]:*+
+[source, ipython3]
+----
+df.to_csv(r"C:\Users\Ravi\Desktop\E_commerce_sales_analysis.csv", index=False)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----

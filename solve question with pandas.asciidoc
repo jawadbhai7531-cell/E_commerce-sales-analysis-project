@@ -1,0 +1,212 @@
++*In[1]:*+
+[source, ipython3]
+----
+import pandas as pd
+
+----
+
+
++*In[2]:*+
+[source, ipython3]
+----
+df = pd.read_csv(r"C:\Users\Ravi\Desktop\E_commerce_sales_analysis.csv")
+----
+
+
++*In[3]:*+
+[source, ipython3]
+----
+df.head()
+----
+
+
++*Out[3]:*+
+----
+[cols=",,,,,,,,,,,,,,,,,,,,,",options="header",]
+|===
+| |order++_++id |customer++_++id |order++_++status
+|order++_++purchase++_++timestamp |order++_++approved++_++at
+|order++_++delivered++_++customer++_++date
+|order++_++estimated++_++delivery++_++date |delivery++_++days
+|delivery++_++delay |purchase++_++month |...
+|product++_++category++_++name |product++_++weight++_++g
+|seller++_++city |seller++_++state |payment++_++sequential
+|payment++_++type |payment++_++installments |payment++_++value
+|review++_++score |review++_++creation++_++date
+|0 |1 |9ef432eb6251297304e76186b10a928d |delivered |2017-10-02 10:56:00
+|2017-10-02 11:07:00 |2017-10-10 21:25:00 |2017-10-18 |8 |-8 |10 |...
+|utilidades++_++domesticas |500 |maua |SP |1 |credit++_++card |1 |18.12
+|4.0 |10/11/2017
+
+|1 |2 |9ef432eb6251297304e76186b10a928d |delivered |2017-10-02 10:56:00
+|2017-10-02 11:07:00 |2017-10-10 21:25:00 |2017-10-18 |8 |-8 |10 |...
+|utilidades++_++domesticas |500 |maua |SP |3 |voucher |1 |2.00 |4.0
+|10/11/2017
+
+|2 |3 |9ef432eb6251297304e76186b10a928d |delivered |2017-10-02 10:56:00
+|2017-10-02 11:07:00 |2017-10-10 21:25:00 |2017-10-18 |8 |-8 |10 |...
+|utilidades++_++domesticas |500 |maua |SP |2 |voucher |1 |18.59 |4.0
+|10/11/2017
+
+|3 |4 |b0830fb4747a6c6d20dea0b8c802d7ef |delivered |2018-07-24 20:41:00
+|2018-07-26 03:24:00 |2018-08-07 15:27:00 |2018-08-13 |13 |-6 |7 |...
+|perfumaria |400 |belo horizonte |SP |1 |boleto |1 |141.46 |4.0
+|8/8/2018
+
+|4 |5 |41ce2a54c0b03bf3443c3d931a367089 |delivered |2018-08-08 08:38:00
+|2018-08-08 08:55:00 |2018-08-17 18:06:00 |2018-09-04 |9 |-18 |8 |...
+|automotivo |420 |guariba |SP |1 |credit++_++card |3 |179.12 |5.0
+|8/18/2018
+|===
+
+5 rows × 32 columns
+----
+
+
++*In[8]:*+
+[source, ipython3]
+----
+#Q5. Which product category generates the highest revenue?
+category_revenue = df.groupby("product_category_name")["price"].sum()
+
+category_revenue = category_revenue.sort_values(ascending=False)
+
+category_revenue.head(1)
+#Q6. Which payment method is most popular?
+payment_popularity = df["payment_type"].value_counts()
+
+payment_popularity.head(1)
+#Q7. Which state has the highest sales?
+state_sales = df.groupby("customer_state")["price"].sum()
+
+state_sales = state_sales.sort_values(ascending=False)
+
+state_sales.head(1)
+#Q8. What is the average order value (AOV)?
+total_revenue = df["price"].sum()
+
+total_orders = df["order_id"].nunique()
+
+AOV = total_revenue / total_orders
+
+print("Average Order Value:", AOV)
+
+----
+
+
++*Out[8]:*+
+----
+Average Order Value: 120.64612126898793
+----
+
+
++*In[9]:*+
+[source, ipython3]
+----
+#Q5. Which product category generates the highest revenue?
+category_revenue = df.groupby("product_category_name")["price"].sum()
+
+category_revenue = category_revenue.sort_values(ascending=False)
+
+category_revenue.head(1)
+----
+
+
++*Out[9]:*+
+----product_category_name
+beleza_saude    1301813.0
+Name: price, dtype: float64----
+
+
++*In[11]:*+
+[source, ipython3]
+----
+#Q6. Which payment method is most popular?
+payment_popularity = df["payment_type"].value_counts()
+
+payment_popularity.head(1)
+
+----
+
+
++*Out[11]:*+
+----payment_type
+credit_card    87251
+Name: count, dtype: int64----
+
+
++*In[12]:*+
+[source, ipython3]
+----
+#Q7. Which state has the highest sales?
+state_sales = df.groupby("customer_state")["price"].sum()
+
+state_sales = state_sales.sort_values(ascending=False)
+
+state_sales.head(1)
+----
+
+
++*Out[12]:*+
+----customer_state
+SP    5475803.59
+Name: price, dtype: float64----
+
+
++*In[13]:*+
+[source, ipython3]
+----
+#Q8. What is the average order value (AOV)?
+total_revenue = df["price"].sum()
+
+total_orders = df["order_id"].nunique()
+
+AOV = total_revenue / total_orders
+
+print("Average Order Value:", AOV)
+
+----
+
+
++*Out[13]:*+
+----
+Average Order Value: 120.64612126898793
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#Q9. What is the distribution of orders by order status?
+
+#Q10. What is the average delivery time?
+
+----
+
+
++*In[14]:*+
+[source, ipython3]
+----
+#Q10. What is the average delivery time?
+average_delivery = df["delivery_days"].mean()
+
+print("Average Delivery Time:", average_delivery, "days")
+----
+
+
++*Out[14]:*+
+----
+Average Delivery Time: 12.02918875053889 days
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#Q9. What is the distribution of orders by order status?
+order_distribution = df.groupby("order_status")["order_id"].nunique()
+
+order_distribution = order_distribution.sort_values(ascending=False)
+
+print(order_distribution)
+----
